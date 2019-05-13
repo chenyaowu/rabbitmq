@@ -18,7 +18,7 @@
 
 - AMQP协议模型
 
-  ![AMQP](https://github.com/chenyaowu/rabbitmq/image/AMQP.jpg)
+  ![AMQP](https://github.com/chenyaowu/rabbitmq/blob/master/image/AMQP.jpg)
 
 - AMQP核心概念
 
@@ -34,8 +34,8 @@
 
 - RabbitMQ整体架构
 
-  ![RabbitMQ](https://github.com/chenyaowu/rabbitmq/image/RabbitMQ.jpg)
+  ![RabbitMQ](https://github.com/chenyaowu/rabbitmq/blob/master/image/RabbitMQ.jpg)
 
 - RabbitMQ消息流转图
 
-  ![RabbitMQ](https://github.com/chenyaowu/rabbitmq/image/RabbitMQ2.jpg)
+  ![RabbitMQ](https://github.com/chenyaowu/rabbitmq/blob/master/image/RabbitMQ2.jpg)
