@@ -116,4 +116,26 @@ ip:15672
 
 - rabbitmqctl rename_cluster_node oldnode1 newnode1 [oldnode2] [newnode2 ...] 修改节点名称
 
-  
+
+## Exchange
+
+- 接收消息，并根据路由键转发消息到所绑定的队列
+
+  ![Exchange](https://github.com/chenyaowu/rabbitmq/blob/master/image/Exchange.jpg)
+
+- 交换机属性
+
+  - Name：交换机名称
+  - Type：交换机类型（direct、topic、fanout、headers）
+  - Durability：是否需要持久化
+  - Auto Delete：当最后一个绑定到Exchange上的队列删除后，自动删除该Exchange
+  - Internal：当前Exchange是否用于RabbitMQ内部使用，默认为False
+  - Arguments：扩展参数，用于扩展AMQP协议自制定化使用
+
+- Direct Exchange
+
+  - 所有发送到Direct Exchange的消息被转发到RouteKey中指定的Queue
+
+  - Warming：Direct模式可以使用RabbitMQ自带的Exchange:default Exchange，所以不需要将Exchange进行任何绑定操作，消息传递时，RouteKey必须完全匹配才会被队列接收，否则消息会被抛弃。
+
+    ![Direct Exchange](https://github.com/chenyaowu/rabbitmq/blob/master/image/Direct_Exchange.jpg)
