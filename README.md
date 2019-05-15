@@ -139,3 +139,15 @@ ip:15672
   - Warming：Direct模式可以使用RabbitMQ自带的Exchange:default Exchange，所以不需要将Exchange进行任何绑定操作，消息传递时，RouteKey必须完全匹配才会被队列接收，否则消息会被抛弃。
 
     ![Direct Exchange](https://github.com/chenyaowu/rabbitmq/blob/master/image/Direct_Exchange.jpg)
+
+- Topic Exchange
+
+  - 所有发送到Topic Exchange的消息被转发到所有关心RouteKey中指定Topic的Queue中
+
+  - Exchange将RouteKey和某Topic进行模糊匹配，此时队列需要绑定一个Topic
+
+  - Warming：可以使用通配符进行模糊匹配。（“#”匹配一个或多个词 "*"匹配一个词）
+
+    ![Topic Exchange](https://github.com/chenyaowu/rabbitmq/blob/master/image/Topic_Exchange.jpg)
+
+  
