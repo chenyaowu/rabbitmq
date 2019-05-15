@@ -149,5 +149,21 @@ ip:15672
   - Warming：可以使用通配符进行模糊匹配。（“#”匹配一个或多个词 "*"匹配一个词）
 
     ![Topic Exchange](https://github.com/chenyaowu/rabbitmq/blob/master/image/Topic_Exchange.jpg)
+  
+- Fanout Exchange
 
+  - 不处理路由键，只需要简单的讲队列绑定到交换机上
+
+  - 发送到交换机的消息都会被转发到与该交换机绑定的所有队列上
+
+  - Fanout交换机转发消息是最快的
+
+    ![Fanout Exchange](https://github.com/chenyaowu/rabbitmq/blob/master/image/Fanout_Exchange.jpg)
+  
+  
+  
+  
+  
+  
+  
   
