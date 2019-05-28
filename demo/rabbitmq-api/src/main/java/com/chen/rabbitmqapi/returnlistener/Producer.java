@@ -23,25 +23,22 @@ public class Producer {
 		channel.addReturnListener(new ReturnListener() {
 			@Override
 			public void handleReturn(int replyCode, String replyText, String exchange,
-					String routingKey, BasicProperties properties, byte[] body) throws IOException {
+				String routingKey, BasicProperties properties, byte[] body) throws IOException {
 				
-				System.err.println("---------handle  return----------");
-				System.err.println("replyCode: " + replyCode);
-				System.err.println("replyText: " + replyText);
-				System.err.println("exchange: " + exchange);
-				System.err.println("routingKey: " + routingKey);
-				System.err.println("properties: " + properties);
-				System.err.println("body: " + new String(body));
+				System.out.println("---------handle  return----------");
+				System.out.println("replyCode: " + replyCode);
+				System.out.println("replyText: " + replyText);
+				System.out.println("exchange: " + exchange);
+				System.out.println("routingKey: " + routingKey);
+				System.out.println("properties: " + properties);
+				System.out.println("body: " + new String(body));
 			}
 		});
 		
 		
+		//channel.basicPublish(exchange, routingKey, true, null, msg.getBytes());
+		
 		channel.basicPublish(exchange, routingKeyError, true, null, msg.getBytes());
-		
-		//channel.basicPublish(exchange, routingKeyError, true, null, msg.getBytes());
-		
-		ConnectionUtil.close();
-		
-		
+
 	}
 }

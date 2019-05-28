@@ -2,10 +2,8 @@ package com.chen.rabbitmqapi.dlx;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import com.chen.rabbitmqapi.uitl.ConnectionUtil;
 import com.rabbitmq.client.Channel;
-
 
 public class Consumer {
 
@@ -19,7 +17,6 @@ public class Consumer {
 		String queueName = "test_dlx_queue";
 		
 		channel.exchangeDeclare(exchangeName, "topic", true, false, null);
-		
 		Map<String, Object> agruments = new HashMap<>();
 		agruments.put("x-dead-letter-exchange", "dlx.exchange");
 		//这个agruments属性，要设置到声明队列上

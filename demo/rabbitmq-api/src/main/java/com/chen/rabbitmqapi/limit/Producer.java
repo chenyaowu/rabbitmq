@@ -5,14 +5,12 @@ import com.rabbitmq.client.Channel;
 
 public class Producer {
 
-	
 	public static void main(String[] args) throws Exception {
 
 		Channel channel = ConnectionUtil.getChannel();
 		
 		String exchange = "test_qos_exchange";
 		String routingKey = "qos.save";
-		
 		String msg = "Hello RabbitMQ QOS Message";
 		
 		for(int i =0; i<5; i ++){

@@ -6,8 +6,6 @@ import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.QueueingConsumer.Delivery;
 
 public class Consumer {
-
-	
 	public static void main(String[] args) throws Exception {
 
 		Channel channel = ConnectionUtil.getChannel();
@@ -25,10 +23,9 @@ public class Consumer {
 		channel.basicConsume(queueName, true, queueingConsumer);
 		
 		while(true){
-			
 			Delivery delivery = queueingConsumer.nextDelivery();
 			String msg = new String(delivery.getBody());
-			System.err.println("消费者: " + msg);
+			System.out.println("消费者: " + msg);
 		}
 		
 		

@@ -27,9 +27,9 @@ public class Consumer {
 			//7 获取消息
 			Delivery delivery = queueingConsumer.nextDelivery();
 			String msg = new String(delivery.getBody());
-			System.err.println("消费端: " + msg);
+			System.out.println("消费端: " + msg);
 			Map<String, Object> headers = delivery.getProperties().getHeaders();
-			System.err.println("headers get my1 value: " + headers.get("my1"));
+			System.out.println("headers get my1 value: " + headers.get("my1"));
 			
 			//Envelope envelope = delivery.getEnvelope();
 		}
