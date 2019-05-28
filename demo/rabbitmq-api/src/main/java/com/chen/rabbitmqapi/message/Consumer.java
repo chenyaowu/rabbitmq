@@ -2,28 +2,16 @@ package com.chen.rabbitmqapi.message;
 
 import java.util.Map;
 
+import com.chen.rabbitmqapi.uitl.ConnectionUtil;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.QueueingConsumer.Delivery;
 
 public class Consumer {
 
 	public static void main(String[] args) throws Exception {
-		
-		//1 创建一个ConnectionFactory, 并进行配置
-		ConnectionFactory connectionFactory = new ConnectionFactory();
-		connectionFactory.setHost("192.168.0.6");
-		connectionFactory.setPort(5672);
-		connectionFactory.setVirtualHost("/");
-		
-		//2 通过连接工厂创建连接
-		Connection connection = connectionFactory.newConnection();
-		
-		//3 通过connection创建一个Channel
-		Channel channel = connection.createChannel();
+
+		Channel channel = ConnectionUtil.getChannel();
 		
 		//4 声明（创建）一个队列
 		String queueName = "test001";

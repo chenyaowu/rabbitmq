@@ -2,10 +2,8 @@ package com.chen.rabbitmqapi.returnlistener;
 
 import java.io.IOException;
 
-import com.rabbitmq.client.AMQP;
+import com.chen.rabbitmqapi.uitl.ConnectionUtil;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.ReturnListener;
 import com.rabbitmq.client.AMQP.BasicProperties;
 
@@ -13,16 +11,8 @@ public class Producer {
 
 	
 	public static void main(String[] args) throws Exception {
-		
-		
-		ConnectionFactory connectionFactory = new ConnectionFactory();
-		connectionFactory.setHost("192.168.0.6");
-		connectionFactory.setPort(5672);
-		connectionFactory.setVirtualHost("/");
-		
-		Connection connection = connectionFactory.newConnection();
-		Channel channel = connection.createChannel();
-		
+
+		Channel channel = ConnectionUtil.getChannel();
 		String exchange = "test_return_exchange";
 		String routingKey = "return.save";
 		String routingKeyError = "abc.save";
@@ -50,7 +40,7 @@ public class Producer {
 		
 		//channel.basicPublish(exchange, routingKeyError, true, null, msg.getBytes());
 		
-		
+		ConnectionUtil.close();
 		
 		
 	}

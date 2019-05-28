@@ -2,28 +2,19 @@ package com.chen.rabbitmqapi.confirm;
 
 import java.io.IOException;
 
+import com.chen.rabbitmqapi.uitl.ConnectionUtil;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.ConfirmListener;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
+
+
 
 public class Producer {
 
 	
 	public static void main(String[] args) throws Exception {
-		
-		
-		//1 创建ConnectionFactory
-		ConnectionFactory connectionFactory = new ConnectionFactory();
-		connectionFactory.setHost("192.168.0.6");
-		connectionFactory.setPort(5672);
-		connectionFactory.setVirtualHost("/");
-		
-		//2 获取C	onnection
-		Connection connection = connectionFactory.newConnection();
-		
-		//3 通过Connection创建一个新的Channel
-		Channel channel = connection.createChannel();
+
+
+		Channel channel = ConnectionUtil.getChannel();
 		
 		
 		//4 指定我们的消息投递模式: 消息的确认模式 

@@ -3,26 +3,15 @@ package com.chen.rabbitmqapi.message;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.chen.rabbitmqapi.uitl.ConnectionUtil;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
 
 public class Procuder {
 
-	
 	public static void main(String[] args) throws Exception {
-		//1 创建一个ConnectionFactory, 并进行配置
-		ConnectionFactory connectionFactory = new ConnectionFactory();
-		connectionFactory.setHost("192.168.0.6");
-		connectionFactory.setPort(5672);
-		connectionFactory.setVirtualHost("/");
-		
-		//2 通过连接工厂创建连接
-		Connection connection = connectionFactory.newConnection();
-		
-		//3 通过connection创建一个Channel
-		Channel channel = connection.createChannel();
+
+		Channel channel = ConnectionUtil.getChannel();
 		
 		Map<String, Object> headers = new HashMap<>();
 		headers.put("my1", "111");
@@ -43,8 +32,6 @@ public class Procuder {
 			channel.basicPublish("", "test001", properties, msg.getBytes());
 		}
 
-		//5 记得要关闭相关的连接
-		channel.close();
-		connection.close();
+		ConnectionUtil.close();
 	}
 }

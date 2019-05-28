@@ -314,26 +314,3 @@ ip:15672
   1. 设置死信队列的exchange和queue，然后进行绑定
   2. 进行正常声明交换机、队列、绑定，在队列上加上一个参数：arguments.put("x-dead-letter-exchange", "dlx.exchange");
   3. 这样消息在过期、requeue、队列在达到最大长度时，消息就可以直接路由到死信队列。
-
-
-
-  
-
-  
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

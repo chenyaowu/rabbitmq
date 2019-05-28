@@ -1,26 +1,15 @@
 package com.chen.rabbitmqapi.exchange.fanout;
 
+import com.chen.rabbitmqapi.uitl.ConnectionUtil;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.QueueingConsumer.Delivery;
 
 public class Consumer4FanoutExchange {
 
 	public static void main(String[] args) throws Exception {
-		
-        ConnectionFactory connectionFactory = new ConnectionFactory() ;  
-        
-        connectionFactory.setHost("192.168.0.6");
-        connectionFactory.setPort(5672);
-		connectionFactory.setVirtualHost("/");
-		
-        connectionFactory.setAutomaticRecoveryEnabled(true);
-        connectionFactory.setNetworkRecoveryInterval(3000);
-        Connection connection = connectionFactory.newConnection();
-        
-        Channel channel = connection.createChannel();  
+
+        Channel channel = ConnectionUtil.getChannel();
 		//4 声明
 		String exchangeName = "test_fanout_exchange";
 		String exchangeType = "fanout";
