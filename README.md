@@ -16,7 +16,7 @@
   - [Binding](#Binding)
   - [Queue](#Queue)
   - [Message](#Message)
-  - [Virtual host](#Virtual host)
+  - [Virtual host](#VirtualHost)
 - [消息如何保证100%的投递成功](#消息如何保证100%的投递成功)
   - [什么是生产端的可靠性投递？](#什么是生产端的可靠性投递？)
   - [BAT/TMD互联网大厂的解决方案](#BAT/TMD互联网大厂的解决方案)
@@ -195,7 +195,7 @@ ip:15672
 
 - 其他属性：content_type、content_encoding、priority、correlation_id、reply_to、expiration、message_id、timestamp、type、user_id、app_id、cluster_id
 
-#### Virtual host
+#### VirtualHost
 
 - 虚拟主机，用于进行逻辑隔离，最上层的消息路由
 
