@@ -314,3 +314,24 @@ ip:15672
   1. 设置死信队列的exchange和queue，然后进行绑定
   2. 进行正常声明交换机、队列、绑定，在队列上加上一个参数：arguments.put("x-dead-letter-exchange", "dlx.exchange");
   3. 这样消息在过期、requeue、队列在达到最大长度时，消息就可以直接路由到死信队列。
+
+## RabbitMQ整合Spring AMQP
+
+### RabbitAdmin
+
+- RabbitAdmin类可以很好的操作RabbitMQ，在Spring中直接进行注入即可
+
+  ```java
+  @Bean
+  	public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
+  		RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
+  		rabbitAdmin.setAutoStartup(true);
+  		return rabbitAdmin;
+  	}
+  ```
+
+- 注意autoStartup必须设置为true，否则Spring容器不会加载RabbitAdmin类
+
+- RabbitAdmin类底层实现就是从Spring容器中获取Exchange、Binding、RoutingKey以及Queue的@Bean声明
+
+- 然后使用RabbitTemplate的execute方法执行对应的声明、修改、删除等一系列RabbitMQ基础功能操作。
