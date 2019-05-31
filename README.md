@@ -28,8 +28,13 @@
   - [消费端ACK与重回队列](#消费端ACK与重回队列)
   - [TTL队列/消息](#TTL队列/消息)
   - [死信队列](#死信队列)
-
-
+- [RabbitMQ整合SpringAMQP](#RabbitMQ整合SpringAMQP)
+  - [RabbitAdmin](#RabbitAdmin)
+  - [SpringAMQP声明](#SpringAMQP声明)
+  - [消息模板-RabbitTemplate](#消息模板-RabbitTemplate)
+  - [简单消息监听容器-SimpleMessageListenerContainer](#简单消息监听容器-SimpleMessageListenerContainer)
+  - [消息监听适配器-MessageListenerAdapter](#消息监听适配器-MessageListenerAdapter)
+  - [消息转换器-MessageConverter](#消息转换器-MessageConverter)
 ### RabbitMQ概况
 
 - RabbitMQ是一个开源的消息代理和队列服务器，用来通过普通协议在完全不同的应用之间共享数据。RabbitMQ是使用Erlang语言来编写的，并且RabbitMQ是基于AMQP协议的。
@@ -315,7 +320,7 @@ ip:15672
   2. 进行正常声明交换机、队列、绑定，在队列上加上一个参数：arguments.put("x-dead-letter-exchange", "dlx.exchange");
   3. 这样消息在过期、requeue、队列在达到最大长度时，消息就可以直接路由到死信队列。
 
-## RabbitMQ整合Spring AMQP
+## RabbitMQ整合SpringAMQP
 
 ### RabbitAdmin
 
@@ -335,3 +340,65 @@ ip:15672
 - RabbitAdmin类底层实现就是从Spring容器中获取Exchange、Binding、RoutingKey以及Queue的@Bean声明
 
 - 然后使用RabbitTemplate的execute方法执行对应的声明、修改、删除等一系列RabbitMQ基础功能操作。
+
+### SpringAMQP声明
+
+- 在Rabbit基础API里面声明一个Exchange、声明一个绑定、一个队列
+
+  ```ja
+  channel.exchangeDeclare(exchangeName, exchangeType, true, false, null);
+  channel.queueDeclare(queueName, true, false, false, null);
+  channel.queueBind(queueName, exchangeName, routingKey);
+  ```
+
+- 使用SpringAMQP去声明，就需要使用SpringAMQP的如下模式，即声明@Bean方式
+
+  ```java
+  @Bean
+  public TopicExchange exchange001() {
+      return new TopicExchange("topic001", true, false);
+  }
+  
+  @Bean
+  public Queue queue001() {
+      return new Queue("queue001", true); //队列持久
+  }
+  
+  @Bean
+  public Binding binding001() {
+      return BindingBuilder.bind(queue001()).to(exchange001()).with("spring.*");
+  }
+  ```
+
+### 消息模板-RabbitTemplate
+
+- 我们在于SringAMQP整合的时候进行发送消息的关键类
+- 该类提供了丰富的发送消息的方式，包括可靠性投递消息方法、回调监听消息接口ConfirmCallback、返回值确认接口ReturnCallback等等。同样我们需要进行注入到Spring容器中，然后直接使用。
+- 在与Spring整合时需要实例化，但是在与SpringBoot整合时，在配置文件里添加配置即可。
+
+### 简单消息监听容器-SimpleMessageListenerContainer
+
+- 这个类非常的强大，我们可以对他进行很多设置，对于消费者的配置项，这个类都可以满足
+- 监听队列（多个队列）、自动启动、自动声明功能
+- 设置事务特性、事务管理器、事务属性、事务容器（并发）、是否开启事务、回滚消息等
+- 设置消费者数量、最小最大数量、批量消费
+- 设置消息确认和自动确认模式、是否重回队列、异常捕获handler函数
+- 设置消费者标签生成策略、是否独占模式、消费者属性等
+- 设置具体的监听器、消息转换器等等
+- 注意：可以进行动态设置，比如在运行中的应用可以动态的修改其消费者数量的大小、接收消息的模式等
+- 很多基于RabbitMQ的自制化后端监控台在进行动态设置的时候，也是根据这一特性去实现的。
+
+### 消息监听适配器-MessageListenerAdapter
+
+- defaultListenerMethod默认监听方法名称：用于设置监听方法名称
+- Delegate委托对象：实际真实的委托对象，用于处理消息
+- queueOrTagToMethodName队列标识与方法名称组成的集合可以一一进行队列与方法名称的匹配
+- 队列和方法名称绑定，即指定队列里的消息会被绑定的方法所接受处理
+
+### 消息转换器-MessageConverter
+
+- 我们在进行发送消息的时候，正常情况下消息体为二进制的数据方式进行传输，如果希望内部帮我们进行转换，或者指定自定义的转换器，就需要用到MessageConverter
+- 自定义常用转换器：MessageConverter，一般来讲都需要实现这个接口，并重写toMessage方法（java对象转换成message）和fromMessage：Message对象转换成java对象
+- Json转换器： Jackson2JsonMessageConverter，可以进行java对象的转换功能
+- DefaultJackson2JavaTypeMapper映射器：可以进行java对象的映射关系
+- 自定义二进制转换器：图片类型、PDF、PPT、流媒体
