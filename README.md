@@ -35,6 +35,13 @@
   - [简单消息监听容器-SimpleMessageListenerContainer](#简单消息监听容器-SimpleMessageListenerContainer)
   - [消息监听适配器-MessageListenerAdapter](#消息监听适配器-MessageListenerAdapter)
   - [消息转换器-MessageConverter](#消息转换器-MessageConverter)
+- [RabbitMQ整合SpringBoot整合配置](#RabbitMQ整合SpringBoot整合配置)
+  - [生产端核心配置](#生产端核心配置)
+  - [publisher-confirms](#publisher-confirms)
+  - [publisher-returns](#publisher-returns)
+  - [消费端核心配置](#消费端核心配置)
+  - [@RabbitListener](#@RabbitListener)
+
 ### RabbitMQ概况
 
 - RabbitMQ是一个开源的消息代理和队列服务器，用来通过普通协议在完全不同的应用之间共享数据。RabbitMQ是使用Erlang语言来编写的，并且RabbitMQ是基于AMQP协议的。
@@ -402,3 +409,62 @@ ip:15672
 - Json转换器： Jackson2JsonMessageConverter，可以进行java对象的转换功能
 - DefaultJackson2JavaTypeMapper映射器：可以进行java对象的映射关系
 - 自定义二进制转换器：图片类型、PDF、PPT、流媒体
+
+## RabbitMQ整合SpringBoot整合配置
+
+### 生产端核心配置
+
+```properties
+spring.rabbitmq.publisher-confirms=true
+spring.rabbitmq.publisher-returns=true
+# 在发送消息的时候对template进行配置mandatory=true保证监听有效
+spring.rabbitmq.template.mandatory=true 
+#生产端还可以配置其他属性，比如发送重试，超时时间，次数，间隔等
+```
+
+### publisher-confirms
+
+- 实现一个监听器用于监听Broker端给我们返回的确认请求：RabbitTemplate.ConfirmCallBack
+
+### publisher-returns
+
+- 保证消息对Broker端是可达的，如果出现路由键不可达的情况，则使用监听器对不可达的消息进行后续的处理，保证消息的路由成功：RabbitTemplate.ReturnCallback
+
+### 消费端核心配置
+
+```properties
+#首先配置手工确认模式，用于ACK的手工处理，这样我们可以保证消息的可靠性送达，或者在消费端消费失败的时候可以做到重回队列，根据业务记录日志等处理
+spring.cloud.stream.rabbit.bindings.input_channel.consumer.acknowledge-mode=MANUAL
+#可以设置消费端的监听个数和最大个数，用于控制消费端的并发情况
+spring.cloud.stream.bindings.input_channel.consumer.concurrency=1
+spring.cloud.stream.rabbit.bindings.input_channel.consumer.max-concurrency=5
+```
+
+### @RabbitListener
+
+- 消费端监听@RabbitListener注解，这个对于在实际工作中非常的好用
+
+- @RabbitListener是一个组合注解，里面可以注解配置@QueueBingding、@Queue、@Exchange直接通过这个组合注解一次性搞定消费端交换机、队列、绑定、路由、并且配置监听功能等
+
+- example
+
+  ```java
+   @RabbitListener(
+          bindings = @QueueBinding(
+              value = @Queue(value = "queue-1", durable = "true"),
+              exchange = @Exchange(value = "exchange-1", durable = "true", type = "topic", ignoreDeclarationExceptions = "true"),
+              key = "springboot.*"
+           )
+      )
+      @RabbitHandler
+      public void onMessage(Message message, Channel channel) throws Exception {
+          System.err.println("--------------------------------------");
+          System.err.println("消费端Payload: " + message.getPayload());
+          Long deliveryTag = (Long) message.getHeaders().get(AmqpHeaders.DELIVERY_TAG);
+          //手工ACK
+          channel.basicAck(deliveryTag, false);
+      }
+  ```
+
+  
+
