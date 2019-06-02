@@ -41,6 +41,7 @@
   - [publisher-returns](#publisher-returns)
   - [消费端核心配置](#消费端核心配置)
   - [@RabbitListener](#@RabbitListener)
+- [RabbitMQ整合SpringCloudStream整合](#RabbitMQ整合SpringCloudStream整合)
 
 ### RabbitMQ概况
 
@@ -466,5 +467,25 @@ spring.cloud.stream.rabbit.bindings.input_channel.consumer.max-concurrency=5
       }
   ```
 
+
+
+## RabbitMQ整合SpringCloudStream整合
+
+- SpringCloudStream整合架构核心图
+
+  ![RabbitSpringCloud](https://github.com/chenyaowu/rabbitmq/blob/master/image/RabbitSpringCloud.jpg)
+
+- Barista接口：是定义来作为后面类的参数，这一接口定义通道类型和名称，通道名称是作为配置用，通道类型则决定了app会使用这一通过进行发送消息还是从中接收消息。
+
+- @Output：输出注解，用于定义发送消息接口
+
+- @Input：输入注解，用于定义消息的消费者接口
+
+- @StreamListener：用于定义监听方法的注解
+
+- 只需要使用好上面3个注解，就可以使用好SpringCloudStream。在实现高性能消息的生产和消费的场景非常适合，但是使用SpringCloudStream框架有一个非常大的问题就是不能实现可靠性投递，也就是没办法保证消息的100%可靠性，会存在少量消息丢失问题。
+
   
+
+
 
